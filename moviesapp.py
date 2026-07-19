@@ -3,12 +3,15 @@ import pandas as pd
 import requests
 import difflib
 import concurrent.futures
+import os
+from dotenv import load_dotenv
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-API_KEY = "f478a6f024fb29c80600efeef15b8b66"
-OMDB_API_KEY = "4836e5f4"
+load_dotenv()
 
+API_KEY = os.getenv("API_KEY")
+OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 PLATFORM_LINKS = {
     "Netflix": "https://www.netflix.com/search?q=",
     "Amazon Prime Video": "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
