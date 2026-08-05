@@ -6,6 +6,8 @@ import concurrent.futures
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+st.set_page_config(page_title="CineMatch", page_icon="🎬", layout="wide")
+
 API_KEY = st.secrets["API_KEY"]
 OMDB_API_KEY = st.secrets["OMDB_API_KEY"]
 
@@ -219,8 +221,8 @@ def show_movie_card(movie):
                 st.rerun()
 
 # ------------------ UI ------------------
-st.set_page_config(page_title="CineMatch", page_icon="🎬", layout="wide")
 
+# ------------------ UI ------------------
 st.markdown("""
 <style>
 input[type="text"] { font-size: 18px !important; padding: 10px !important; }
