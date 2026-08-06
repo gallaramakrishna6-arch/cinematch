@@ -12,16 +12,24 @@ API_KEY = st.secrets["API_KEY"]
 OMDB_API_KEY = st.secrets["OMDB_API_KEY"]
 
 PLATFORM_LINKS = {
-    "Netflix": "https://www.netflix.com/search?q=",
-    "Amazon Prime Video": "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
-    "Amazon Prime Video with Ads": "https://www.primevideo.com/search/ref=atv_nb_sr?phrase=",
-    "JioHotstar": "https://www.hotstar.com/in/search?q=",
-    "Disney Plus Hotstar": "https://www.hotstar.com/in/search?q=",
-    "SonyLIV": "https://www.sonyliv.com/search?q=",
-    "ZEE5": "https://www.zee5.com/search?q=",
-    "Apple TV": "https://tv.apple.com/search?term=",
-    "YouTube": "https://www.youtube.com/results?search_query=",
-    "VI movies and tv": "https://www.vimovies.com/",
+    "Netflix": ("🅽", "https://www.netflix.com/search?q="),
+    "Amazon Prime Video": ("▶️", "https://www.primevideo.com/search/ref=atv_nb_sr?phrase="),
+    "Amazon Prime Video with Ads": ("▶️", "https://www.primevideo.com/search/ref=atv_nb_sr?phrase="),
+    "JioHotstar": ("⭐", "https://www.hotstar.com/in/search?q="),
+    "Disney Plus Hotstar": ("⭐", "https://www.hotstar.com/in/search?q="),
+    "SonyLIV": ("📺", "https://www.sonyliv.com/search?q="),
+    "ZEE5": ("🎬", "https://www.zee5.com/search?q="),
+    "Apple TV": ("🍎", "https://tv.apple.com/search?term="),
+    "YouTube": ("▶️", "https://www.youtube.com/results?search_query="),
+    "VI movies and tv": ("📱", "https://www.vimovies.com/"),
+}
+
+DOMAIN_MAP = {
+    "Netflix": "netflix.com", "Amazon Prime Video": "primevideo.com",
+    "Amazon Prime Video with Ads": "primevideo.com", "JioHotstar": "hotstar.com",
+    "Disney Plus Hotstar": "hotstar.com", "SonyLIV": "sonyliv.com",
+    "ZEE5": "zee5.com", "Apple TV": "tv.apple.com", "YouTube": "youtube.com",
+    "VI movies and tv": "vimovies.com",
 }
 
 MOOD_GENRE_MAP = {
@@ -40,6 +48,7 @@ MOOD_GENRE_MAP = {
     'history': ['History', 'Drama'], 'kids': ['Family', 'Animation'], 'alone': ['Drama', 'Mystery'],
 }
 
+
 def detect_mood_genres(query):
     query_lower = query.lower()
     detected = set()
@@ -54,6 +63,7 @@ def detect_mood_genres(query):
                 detected.update(MOOD_GENRE_MAP[close[0]])
     return list(detected)
 
+
 @st.cache_data
 def load_data():
     df = pd.read_csv("movies_data.csv")
@@ -61,86 +71,107 @@ def load_data():
     df['year'] = pd.to_datetime(df['release_date'], errors='coerce').dt.year
     return df
 
+
 @st.cache_resource
 def build_similarity(_df):
     cv = CountVectorizer(max_features=5000, stop_words='english')
     vectors = cv.fit_transform(_df['tags'].fillna(''))
     return cosine_similarity(vectors)
 
+
 df = load_data()
 similarity = build_similarity(df)
+
+
+def fetch_with_retry(url, retries=3, timeout=10):
+    for attempt in range(retries):
+        try:
+            response = requests.get(url, timeout=timeout)
+            return response.json()
+        except Exception:
+            if attempt == retries - 1:
+                return None
+            continue
+    return None
+
 
 @st.cache_data(ttl=3600)
 def get_watch_info(movie_id, country='IN'):
     url = f"https://api.themoviedb.org/3/movie/{movie_id}/watch/providers?api_key={API_KEY}"
-    try:
-        response = requests.get(url, timeout=10)
-        data = response.json()
-        providers = data.get('results', {}).get(country, {})
-        flatrate = providers.get('flatrate', [])
-        return [p['provider_name'] for p in flatrate] if flatrate else []
-    except Exception:
+    data = fetch_with_retry(url)
+    if not data:
         return []
+    providers = data.get('results', {}).get(country, {})
+    flatrate = providers.get('flatrate', [])
+    return [p['provider_name'] for p in flatrate] if flatrate else []
+
 
 @st.cache_data(ttl=3600)
 def get_movie_details(movie_id):
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}"
-    try:
-        response = requests.get(url, timeout=10)
-        data = response.json()
-        budget = data.get('budget', 0)
-        revenue = data.get('revenue', 0)
-        imdb_id = data.get('imdb_id', None)
-        if budget == 0 or revenue == 0:
-            status = "No data"
-        elif revenue >= budget * 2:
-            status = "🔥 Blockbuster"
-        elif revenue > budget:
-            status = "✅ Hit"
-        else:
-            status = "❌ Flop"
-        return {"budget": budget, "revenue": revenue, "status": status, "imdb_id": imdb_id}
-    except Exception:
-        return {"budget": 0, "revenue": 0, "status": "No data", "imdb_id": None}
+    data = fetch_with_retry(url)
+    if not data:
+        return {"budget": 0, "revenue": 0, "status": "No data", "imdb_id": None, "runtime": 0}
+    budget = data.get('budget', 0)
+    revenue = data.get('revenue', 0)
+    imdb_id = data.get('imdb_id', None)
+    runtime = data.get('runtime', 0)
+    if budget == 0 or revenue == 0:
+        status = "No data"
+    elif revenue >= budget * 2:
+        status = "🔥 Blockbuster"
+    elif revenue > budget:
+        status = "✅ Hit"
+    else:
+        status = "❌ Flop"
+    return {"budget": budget, "revenue": revenue, "status": status, "imdb_id": imdb_id, "runtime": runtime}
+
 
 @st.cache_data(ttl=3600)
 def get_director(movie_id):
     url = f"https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={API_KEY}"
-    try:
-        response = requests.get(url, timeout=10)
-        data = response.json()
-        crew = data.get('crew', [])
-        directors = [c['name'] for c in crew if c.get('job') == 'Director']
-        return ", ".join(directors) if directors else "N/A"
-    except Exception:
+    data = fetch_with_retry(url)
+    if not data:
         return "N/A"
+    crew = data.get('crew', [])
+    directors = [c['name'] for c in crew if c.get('job') == 'Director']
+    return ", ".join(directors) if directors else "N/A"
+
+
+@st.cache_data(ttl=3600)
+def get_cast(movie_id, top_n=4):
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={API_KEY}"
+    data = fetch_with_retry(url)
+    if not data:
+        return []
+    cast = data.get('cast', [])[:top_n]
+    return [{"name": c['name'], "photo": c.get('profile_path')} for c in cast]
+
 
 @st.cache_data(ttl=3600)
 def get_trailer(movie_id):
     url = f"https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={API_KEY}"
-    try:
-        response = requests.get(url, timeout=10)
-        data = response.json()
-        for video in data.get('results', []):
-            if video.get('type') == 'Trailer' and video.get('site') == 'YouTube':
-                return f"https://www.youtube.com/watch?v={video['key']}"
+    data = fetch_with_retry(url)
+    if not data:
         return None
-    except Exception:
-        return None
+    for video in data.get('results', []):
+        if video.get('type') == 'Trailer' and video.get('site') == 'YouTube':
+            return f"https://www.youtube.com/watch?v={video['key']}"
+    return None
+
 
 @st.cache_data(ttl=3600)
 def get_imdb_full(imdb_id):
     if not imdb_id:
         return "N/A", "N/A"
     url = f"https://www.omdbapi.com/?i={imdb_id}&apikey={OMDB_API_KEY}"
-    try:
-        response = requests.get(url, timeout=10)
-        data = response.json()
-        rating = data.get('imdbRating', 'N/A')
-        awards = data.get('Awards', 'N/A')
-        return rating, awards
-    except Exception:
+    data = fetch_with_retry(url)
+    if not data:
         return "N/A", "N/A"
+    rating = data.get('imdbRating', 'N/A')
+    awards = data.get('Awards', 'N/A')
+    return rating, awards
+
 
 @st.cache_data(ttl=3600)
 def get_all_details(movie_id):
@@ -156,10 +187,12 @@ def get_all_details(movie_id):
     imdb_rating, awards = get_imdb_full(details['imdb_id'])
     return details, director, platforms, imdb_rating, trailer, awards
 
+
 def format_money(amount):
     if amount == 0:
         return "N/A"
     return f"${amount:,}"
+
 
 def recommend(movie_title, top_n=5):
     matches = df[df['title'].str.lower() == movie_title.lower()]
@@ -167,24 +200,37 @@ def recommend(movie_title, top_n=5):
         return None, []
     idx = matches.index[0]
     distances = list(enumerate(similarity[idx]))
-    distances = sorted(distances, key=lambda x: x[1], reverse=True)[1:top_n+1]
+    distances = sorted(distances, key=lambda x: x[1], reverse=True)[1:top_n + 1]
     results = [df.iloc[i] for i, score in distances]
     return df.iloc[idx], results
 
+
 def show_search_result_card(row):
+    rating_10 = round(row['rating_5'] * 2, 1)
     if pd.notna(row['poster_path']):
-        st.image(f"https://image.tmdb.org/t/p/w200{row['poster_path']}")
+        st.markdown(f"""
+        <div style="position:relative;">
+            <img src="https://image.tmdb.org/t/p/w300{row['poster_path']}" style="width:100%; border-radius:8px;">
+            <div style="position:absolute; top:8px; left:8px; background:#000000cc; color:#FFD700;
+                        padding:3px 8px; border-radius:6px; font-size:13px; font-weight:bold;">
+                ⭐ {rating_10}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     else:
         st.write("🎬 (No poster)")
+
     if st.button(row['title'], key=f"pick_{row['title']}_{row['id']}", use_container_width=True):
         st.session_state.selected_movie = row['title']
         st.session_state.page_num = 0
         st.rerun()
-    st.caption(f"⭐ {row['rating_5']}/5 | {', '.join(row['genres'])}")
+    st.caption(f"{row['language']} · {', '.join(row['genres'][:2])}")
+
 
 def show_main_movie_panel(movie):
     with st.spinner("Loading details..."):
         details, director, platforms, imdb_rating, trailer, awards = get_all_details(movie['id'])
+        cast = get_cast(movie['id'])
 
     with st.container(border=True):
         c1, c2 = st.columns([1, 2])
@@ -193,44 +239,83 @@ def show_main_movie_panel(movie):
                 st.image(f"https://image.tmdb.org/t/p/w300{movie['poster_path']}")
         with c2:
             movie_year = movie['release_date'][:4] if pd.notna(movie['release_date']) and movie['release_date'] else "N/A"
-            st.markdown(f"## {movie['title']}")
-            st.caption(f"{movie_year} · {movie['language']} · {', '.join(movie['genres'])}")
+            runtime = details.get('runtime', 0)
+            runtime_str = f"{runtime // 60}h {runtime % 60}m" if runtime else "N/A"
 
-            g1, g2, g3, g4 = st.columns(4)
-            g1.metric("⭐ TMDB", f"{movie['rating_5']}/5")
-            g2.metric("🎯 IMDb", f"{imdb_rating}/10")
-            g3.metric("💰 Budget", format_money(details['budget']))
-            g4.metric("💵 Collections", format_money(details['revenue']))
+            title_col, heart_col = st.columns([5, 1])
+            with title_col:
+                st.markdown(f"# {movie['title']}")
+            with heart_col:
+                st.button("❤️", key=f"heart_{movie['id']}")
 
-            st.write(f"**🎬 Director:** {director}")
-            st.write(f"**📊 Status:** {details['status']}")
-            st.write(f"**🏆 Awards:** {awards}")
+            st.markdown(f"""
+            <p style="color:#aaa;">{movie_year} &nbsp;·&nbsp; {runtime_str} &nbsp;·&nbsp; {movie['language']}
+            &nbsp;&nbsp; <span style="background:#FFD70022; color:#FFD700; padding:3px 10px; border-radius:6px; font-weight:bold;">⭐ {imdb_rating}/10 IMDb</span></p>
+            """, unsafe_allow_html=True)
+
+            genre_pills = " ".join([f'<span style="background:#2a2a2a; color:#ddd; padding:5px 12px; border-radius:6px; margin-right:6px; font-size:13px;">{g}</span>' for g in movie['genres']])
+            st.markdown(f"<div style='margin-bottom:12px;'>{genre_pills}</div>", unsafe_allow_html=True)
+
+            st.markdown("**Overview**")
             st.write(movie['overview'])
 
-            btn_cols = st.columns(2)
+            st.write(f"**🎬 Director:** {director}")
+
+            if cast:
+                st.markdown("**Cast**")
+                cast_cols = st.columns(6)
+                for i, actor in enumerate(cast):
+                    with cast_cols[i]:
+                        if actor['photo']:
+                            st.image(f"https://image.tmdb.org/t/p/w92{actor['photo']}", width=70)
+                        st.caption(actor['name'])
+
+            st.markdown("")
+            btn_cols = st.columns([1, 1, 1.3, 0.5])
             with btn_cols[0]:
                 if trailer:
                     st.link_button("▶️ Watch Trailer", trailer)
                 else:
                     yt_search = f"https://www.youtube.com/results?search_query={movie['title'].replace(' ', '+')}+trailer"
-                    st.link_button("🔍 Search Trailer on YouTube", yt_search)
+                    st.link_button("▶️ Watch Trailer", yt_search)
             with btn_cols[1]:
                 yt_songs = f"https://www.youtube.com/results?search_query={movie['title'].replace(' ', '+')}+songs"
-                st.link_button("🎵 Search Songs on YouTube", yt_songs)
+                st.link_button("🎵 Songs", yt_songs)
+            with btn_cols[2]:
+                st.button("➕ Watchlist", key=f"watchlist_{movie['id']}")
+
+            g1, g2, g3 = st.columns(3)
+            g1.metric("💰 Budget", format_money(details['budget']))
+            g2.metric("💵 Collections", format_money(details['revenue']))
+            g3.metric("📊 Status", details['status'])
+            st.caption(f"🏆 Awards: {awards}")
 
             if platforms:
-                st.write("**📺 Watch on:**")
+                st.markdown("**Available on (OTT)**")
                 p_cols = st.columns(len(platforms))
                 for i, p in enumerate(platforms):
-                    link = PLATFORM_LINKS.get(p, "https://www.google.com/search?q=" + p.replace(" ", "+"))
+                    _, base_link = PLATFORM_LINKS.get(p, ("🔗", "https://www.google.com/search?q="))
+                    domain = DOMAIN_MAP.get(p, "google.com")
+                    favicon = f"https://www.google.com/s2/favicons?domain={domain}&sz=64"
+                    full_link = base_link + movie['title'].replace(" ", "+")
                     with p_cols[i]:
-                        st.link_button(p, link + movie['title'].replace(" ", "+"))
+                        st.markdown(f"""
+                        <a href="{full_link}" target="_blank" style="text-decoration:none;">
+                            <div style="background:#1A1A1A; border:1px solid #333; border-radius:8px; padding:10px; text-align:center;">
+                                <img src="{favicon}" width="24" style="margin-bottom:4px;"><br>
+                                <span style="color:#ddd; font-size:12px;">{p}</span>
+                            </div>
+                        </a>
+                        """, unsafe_allow_html=True)
             else:
                 st.write("**📺 Not available on OTT**")
 
-            review = st.text_area("Your review/notes", key=f"review_main_{movie['id']}")
-            if st.button("💾 Save review", key=f"save_main_{movie['id']}"):
+            st.markdown("**Your Review**")
+            star_rating = st.feedback("stars", key=f"stars_{movie['id']}")
+            review = st.text_area("Write your review...", key=f"review_main_{movie['id']}", label_visibility="collapsed")
+            if st.button("Submit Review", key=f"save_main_{movie['id']}"):
                 st.success("Review saved!")
+
 
 def show_movie_card(movie):
     with st.container(border=True):
@@ -249,10 +334,37 @@ def show_movie_card(movie):
                 st.session_state.selected_movie = movie['title']
                 st.rerun()
 
+
 # ------------------ UI ------------------
 st.markdown("""
 <style>
 input[type="text"] { font-size: 18px !important; padding: 10px !important; }
+
+.stButton button {
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+}
+
+div[data-testid="stImage"] img {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.hero-box {
+    padding: 30px 20px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    margin-bottom: 20px;
+    border: 1px solid #E50914;
+}
+
+.stat-card {
+    background-color: #1A1A1A;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    border: 1px solid #333;
+}
 
 @media (max-width: 992px) {
     input[type="text"] { font-size: 16px !important; }
@@ -270,13 +382,33 @@ input[type="text"] { font-size: 18px !important; padding: 10px !important; }
 </style>
 """, unsafe_allow_html=True)
 
-with st.sidebar:
-    st.header("👤 About")
-    st.write("**Developer:** Galla Ramakrishna")
-    st.write("Data Science / CSE Student")
+st.markdown("""
+<div class="hero-box">
+    <h1 style="margin-bottom:0; color:white;">🎬 Cine<span style="color:#E50914;">Match</span></h1>
+    <p style="color:#aaa; font-size:18px; margin-top:4px;">Find Your Next <span style="color:#E50914; font-weight:bold;">Favorite Movie</span></p>
+    <p style="color:#888;">AI-powered recommendations across English, Hindi, Telugu, Malayalam and more.</p>
+</div>
+""", unsafe_allow_html=True)
 
-st.title("🎬 CineMatch")
-st.write("English, Hindi, Telugu, Malayalam movies | Rating 2.5/5+ | with OTT info")
+stat_cols = st.columns(4)
+stats = [("🎬", f"{len(df)}+", "Movies"), ("🎭", f"{len(set(g for genres in df['genres'] for g in genres))}+", "Genres"),
+         ("🌐", "4", "Languages"), ("⭐", "500K+", "Ratings")]
+for col, (icon, num, label) in zip(stat_cols, stats):
+    with col:
+        st.markdown(f"""
+        <div class="stat-card">
+            <div style="font-size:22px;">{icon} <b>{num}</b></div>
+            <div style="color:#888; font-size:13px;">{label}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+with st.sidebar:
+    st.markdown("### 👨‍💻 About")
+    st.write("**Galla Ramakrishna**")
+    st.caption("Data Science / CSE Student")
+    st.divider()
+    st.caption("Made with ❤️ using Streamlit")
+    st.caption("Powered by TMDB · OMDb · YouTube")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -301,7 +433,7 @@ if genre_filter:
                 st.session_state.selected_year = None
                 st.rerun()
         for i in range(0, len(available_years), 8):
-            year_chunk = available_years[i:i+8]
+            year_chunk = available_years[i:i + 8]
             cols = st.columns(8)
             for j, yr in enumerate(year_chunk):
                 with cols[j]:
@@ -350,7 +482,7 @@ else:
             st.write(f"**💝 Movies for you ({len(mood_movies)} found):**")
             rows = list(mood_movies.iterrows())
             for i in range(0, len(rows), 4):
-                row_chunk = rows[i:i+4]
+                row_chunk = rows[i:i + 4]
                 cols = st.columns(4)
                 for j, (_, m) in enumerate(row_chunk):
                     with cols[j]:
@@ -374,7 +506,7 @@ else:
             st.write(f"**🔎 {len(combined_df)} results found — click to view:**")
             rows = list(combined_df.iterrows())
             for i in range(0, len(rows), 4):
-                row_chunk = rows[i:i+4]
+                row_chunk = rows[i:i + 4]
                 cols = st.columns(4)
                 for j, (_, m) in enumerate(row_chunk):
                     with cols[j]:
@@ -393,7 +525,7 @@ else:
 
         rows = list(page_movies.iterrows())
         for i in range(0, len(rows), 4):
-            row_chunk = rows[i:i+4]
+            row_chunk = rows[i:i + 4]
             cols = st.columns(4)
             for j, (_, m) in enumerate(row_chunk):
                 with cols[j]:
