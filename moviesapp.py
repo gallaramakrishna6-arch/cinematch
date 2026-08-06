@@ -173,7 +173,7 @@ def show_main_movie_panel(movie):
         c1, c2 = st.columns([1, 2])
         with c1:
             if pd.notna(movie['poster_path']):
-                st.image(f"https://image.tmdb.org/t/p/w300{movie['poster_path']}", use_container_width=True)
+                st.image(f"https://image.tmdb.org/t/p/w300{movie['poster_path']}")
         with c2:
             movie_year = movie['release_date'][:4] if pd.notna(movie['release_date']) and movie['release_date'] else "N/A"
             st.markdown(f"## {movie['title']}")
