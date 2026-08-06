@@ -116,16 +116,31 @@ def get_director(movie_id):
         return "N/A"
 
 @st.cache_data(ttl=3600)
-def get_imdb_rating(imdb_id):
+def get_trailer(movie_id):
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={API_KEY}"
+    try:
+        response = requests.get(url, timeout=10)
+        data = response.json()
+        for video in data.get('results', []):
+            if video.get('type') == 'Trailer' and video.get('site') == 'YouTube':
+                return f"https://www.youtube.com/watch?v={video['key']}"
+        return None
+    except Exception:
+        return None
+
+@st.cache_data(ttl=3600)
+def get_imdb_full(imdb_id):
     if not imdb_id:
-        return "N/A"
+        return "N/A", "N/A"
     url = f"https://www.omdbapi.com/?i={imdb_id}&apikey={OMDB_API_KEY}"
     try:
         response = requests.get(url, timeout=10)
         data = response.json()
-        return data.get('imdbRating', 'N/A')
+        rating = data.get('imdbRating', 'N/A')
+        awards = data.get('Awards', 'N/A')
+        return rating, awards
     except Exception:
-        return "N/A"
+        return "N/A", "N/A"
 
 @st.cache_data(ttl=3600)
 def get_all_details(movie_id):
@@ -133,11 +148,13 @@ def get_all_details(movie_id):
         f_details = executor.submit(get_movie_details, movie_id)
         f_director = executor.submit(get_director, movie_id)
         f_platforms = executor.submit(get_watch_info, movie_id)
+        f_trailer = executor.submit(get_trailer, movie_id)
         details = f_details.result()
         director = f_director.result()
         platforms = f_platforms.result()
-    imdb_rating = get_imdb_rating(details['imdb_id'])
-    return details, director, platforms, imdb_rating
+        trailer = f_trailer.result()
+    imdb_rating, awards = get_imdb_full(details['imdb_id'])
+    return details, director, platforms, imdb_rating, trailer, awards
 
 def format_money(amount):
     if amount == 0:
@@ -167,7 +184,7 @@ def show_search_result_card(row):
 
 def show_main_movie_panel(movie):
     with st.spinner("Loading details..."):
-        details, director, platforms, imdb_rating = get_all_details(movie['id'])
+        details, director, platforms, imdb_rating, trailer, awards = get_all_details(movie['id'])
 
     with st.container(border=True):
         c1, c2 = st.columns([1, 2])
@@ -187,7 +204,19 @@ def show_main_movie_panel(movie):
 
             st.write(f"**🎬 Director:** {director}")
             st.write(f"**📊 Status:** {details['status']}")
+            st.write(f"**🏆 Awards:** {awards}")
             st.write(movie['overview'])
+
+            btn_cols = st.columns(2)
+            with btn_cols[0]:
+                if trailer:
+                    st.link_button("▶️ Watch Trailer", trailer)
+                else:
+                    yt_search = f"https://www.youtube.com/results?search_query={movie['title'].replace(' ', '+')}+trailer"
+                    st.link_button("🔍 Search Trailer on YouTube", yt_search)
+            with btn_cols[1]:
+                yt_songs = f"https://www.youtube.com/results?search_query={movie['title'].replace(' ', '+')}+songs"
+                st.link_button("🎵 Search Songs on YouTube", yt_songs)
 
             if platforms:
                 st.write("**📺 Watch on:**")
@@ -219,8 +248,6 @@ def show_movie_card(movie):
             if st.button("👁️ View details", key=f"view_{movie['id']}"):
                 st.session_state.selected_movie = movie['title']
                 st.rerun()
-
-# ------------------ UI ------------------
 
 # ------------------ UI ------------------
 st.markdown("""
