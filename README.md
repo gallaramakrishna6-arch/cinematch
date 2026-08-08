@@ -4,9 +4,13 @@
 
 It supports **English, Hindi, Telugu, and Malayalam cinema** and combines a pre-fetched movie dataset with live movie information from **TMDB and OMDb APIs**.
 
-**Live App:** [CineMatch](https://cinematch-uxaudmzzkbyn3ahtrhrquk.streamlit.app/)
+### 🔗 Links
 
-**GitHub:** [CineMatch Repository](https://github.com/gallaramakrishna6-arch/cinematch)
+🚀 **Live App:**  
+https://cinematch-uxaudmzzkbyn3ahtrhrquk.streamlit.app/
+
+💻 **GitHub Repository:**  
+https://github.com/gallaramakrishna6-arch/cinematch
 
 ---
 
@@ -14,23 +18,25 @@ It supports **English, Hindi, Telugu, and Malayalam cinema** and combines a pre-
 
 ### 🎯 Movie Recommendations
 
-* Content-based movie recommendation system
-* TF-IDF vectorization for movie descriptions
-* Cosine similarity to find similar movies
-* Recommendations based on genre and plot similarity
+- Content-based movie recommendation system
+- TF-IDF vectorization for movie descriptions
+- Cosine similarity to find similar movies
+- Recommendations based on genre and plot similarity
 
 ### 🌎 Multi-Language Movies
 
-* 🇺🇸 English
-* 🇮🇳 Hindi
-* 🇮🇳 Telugu
-* 🇮🇳 Malayalam
+CineMatch supports:
+
+- 🇺🇸 English
+- 🇮🇳 Hindi
+- 🇮🇳 Telugu
+- 🇮🇳 Malayalam
 
 ### 🔥 Trending Movies
 
-* Live **Trending Now** movies powered by TMDB
-* Automatically fetches current trending movies
-* Network retry and fallback handling for API failures
+- Live **Trending Now** movies powered by TMDB
+- Automatically fetches current trending movies
+- Network retry and fallback handling for API failures
 
 ### 😊 Mood-Based Search
 
@@ -38,75 +44,75 @@ Describe your mood or situation in natural language and CineMatch suggests suita
 
 Examples:
 
-* "I want something emotional"
-* "Give me a funny movie"
-* "I want an action movie"
-* "Something romantic"
-* "I want a thriller"
+- "I want something emotional"
+- "Give me a funny movie"
+- "I want an action movie"
+- "Something romantic"
+- "I want a thriller"
 
 ### 🔎 Smart Search
 
-* Movie title search
-* Fuzzy matching for typing mistakes
-* Search across multiple languages
+- Movie title search
+- Fuzzy matching for typing mistakes
+- Search across multiple languages
 
 ### 🎬 Rich Movie Details
 
 Each movie can display:
 
-* IMDb rating
-* IMDb vote count
-* Release date
-* Runtime
-* Country
-* Genres
-* Plot / overview
-* Tagline
-* Budget
-* Worldwide revenue
-* Hit / Flop status
-* Awards
-* Production companies
-* IMDb information
+- IMDb rating
+- IMDb vote count
+- Release date
+- Runtime
+- Country
+- Genres
+- Plot / overview
+- Tagline
+- Budget
+- Worldwide revenue
+- Hit / Flop status
+- Awards
+- Production companies
+- IMDb information
 
 ### 👥 Cast & Crew
 
-* Top cast members
-* Full cast list
-* Director
-* Writer
-* Producer
-* Music
-* Editor
-* Cinematography
-* Clickable actor information / Wikipedia search
+- Top cast members
+- Full cast list
+- Director
+- Writer
+- Producer
+- Music
+- Editor
+- Cinematography
+- Clickable actor information / Wikipedia search
 
 ### 📺 OTT Availability
 
 View available streaming platforms such as:
 
-* Netflix
-* Amazon Prime Video
-* Disney+ / Hotstar
-* JioHotstar
-* Other region-specific providers
+- Netflix
+- Amazon Prime Video
+- Disney+ / Hotstar
+- JioHotstar
+- Other region-specific providers
 
 OTT availability is retrieved dynamically from TMDB.
 
 ### ▶️ Trailer & Songs
 
-* YouTube trailer search
-* YouTube movie song search
-* Quick access to related videos
+- YouTube trailer search
+- YouTube movie song search
+- Quick access to related videos
 
 ### ❤️ Favorites & Watchlist
 
 Users can:
 
-* Add movies to Favorites
-* Add movies to Watchlist
-* Remove saved movies
-* Access saved movies from the sidebar
+- Add movies to Favorites
+- Add movies to Watchlist
+- Remove saved movies
+- Access saved movies from the sidebar
 
 Currently, Favorites and Watchlist are stored for the active Streamlit session.
 
@@ -114,57 +120,66 @@ Currently, Favorites and Watchlist are stored for the active Streamlit session.
 
 Users can:
 
-* Rate movies using a star rating
-* Write personal reviews
-* View reviews during the current session
+- Rate movies using a star rating
+- Write personal reviews
+- View reviews during the current session
 
 ### 📱 Responsive UI
 
-The interface is designed to work across:
+CineMatch is designed to work across:
 
-* Desktop
-* Tablet
-* Mobile screens
+- 💻 Desktop
+- 📱 Mobile
+- 📟 Tablet
+
+The mobile interface is optimized with a **2-column movie grid**, compact movie cards, responsive posters, and mobile-friendly spacing while preserving the existing desktop and tablet layouts.
 
 ---
+
 ## 🖼️ Screenshots
 
 ### 🏠 Home
 
-| Home                           | Home 1                            | Home 3                            |
-| ------------------------------ | --------------------------------- | --------------------------------- |
+| Home | Home 1 | Home 3 |
+|---|---|---|
 | ![Home](screenshots/home0.jpg) | ![Home 1](screenshots/home11.jpg) | ![Home 3](screenshots/home13.jpg) |
 
 ### 📖 Read
 
-| Read                           | Read 1                            | Read 2                            |
-| ------------------------------ | --------------------------------- | --------------------------------- |
+| Read | Read 1 | Read 2 |
+|---|---|---|
 | ![Read](screenshots/read0.jpg) | ![Read 1](screenshots/read11.jpg) | ![Read 2](screenshots/read12.jpg) |
 
-| Read 3                            | Read 4                            |
-| --------------------------------- | --------------------------------- |
+| Read 3 | Read 4 |
+|---|---|
 | ![Read 3](screenshots/read13.jpg) | ![Read 4](screenshots/read14.jpg) |
 
 ### 🎭 Mood
 
-| Mood                           | Mood 1                            |
-| ------------------------------ | --------------------------------- |
+| Mood | Mood 1 |
+|---|---|
 | ![Mood](screenshots/mood0.jpg) | ![Mood 1](screenshots/mood11.jpg) |
 
+### 📱 Mobile View
 
+> Mobile view is optimized with a responsive 2-column movie grid for better browsing on smaller screens.
+
+![CineMatch Mobile View](screenshots/mobile.jpg)
+
+---
 
 ## 🛠️ Tech Stack
 
-| Technology                    | Purpose                                              |
-| ----------------------------- | ---------------------------------------------------- |
-| **Python 3.13**               | Core programming language                            |
-| **Streamlit**                 | Web application framework                            |
-| **Pandas**                    | Data processing and filtering                        |
-| **Scikit-learn**              | TF-IDF and cosine similarity                         |
-| **TMDB API**                  | Movie metadata, trending, cast, crew, OTT and videos |
-| **OMDb API**                  | IMDb ratings, votes and awards                       |
-| **Concurrent Futures**        | Parallel API requests                                |
-| **Streamlit Community Cloud** | Application deployment                               |
+| Technology | Purpose |
+|---|---|
+| **Python 3.13** | Core programming language |
+| **Streamlit** | Web application framework |
+| **Pandas** | Data processing and filtering |
+| **Scikit-learn** | TF-IDF and cosine similarity |
+| **TMDB API** | Movie metadata, trending, cast, crew, OTT and videos |
+| **OMDb API** | IMDb ratings, votes and awards |
+| **Concurrent Futures** | Parallel API requests |
+| **Streamlit Community Cloud** | Application deployment |
 
 ---
 
@@ -182,30 +197,30 @@ The interface is designed to work across:
                     │    Streamlit UI      │
                     └──────────┬───────────┘
                                │
-              ┌────────────────┴────────────────┐
-              │                                 │
-              ▼                                 ▼
-     ┌─────────────────┐              ┌──────────────────┐
-     │ Local Movie Data │              │    TMDB API      │
-     │ movies_data.csv  │              │ Live Movie Data  │
-     └────────┬────────┘              └─────────┬────────┘
-              │                                 │
-              ▼                                 ▼
-     ┌─────────────────┐              ┌──────────────────┐
-     │ TF-IDF          │              │ Cast / Crew      │
-     │ Vectorization   │              │ Trending         │
-     └────────┬────────┘              │ OTT / Videos     │
-              │                       │ Budget / Revenue │
-              ▼                       └─────────┬────────┘
-     ┌─────────────────┐                        │
-     │ Cosine          │                        ▼
-     │ Similarity      │              ┌──────────────────┐
-     └────────┬────────┘              │     OMDb API     │
-              │                       │ IMDb / Awards    │
-              │                       └─────────┬────────┘
-              │                                 │
-              └────────────────┬────────────────┘
-                               ▼
+               ┌───────────────┴───────────────┐
+               │                               │
+               ▼                               ▼
+      ┌─────────────────┐             ┌──────────────────┐
+      │ Local Movie Data │             │    TMDB API      │
+      │ movies_data.csv  │             │ Live Movie Data  │
+      └────────┬────────┘             └─────────┬────────┘
+               │                                │
+               ▼                                ▼
+      ┌─────────────────┐             ┌──────────────────┐
+      │ TF-IDF          │             │ Cast / Crew      │
+      │ Vectorization   │             │ Trending         │
+      └────────┬────────┘             │ OTT / Videos     │
+               │                      │ Budget / Revenue │
+               ▼                      └─────────┬────────┘
+      ┌─────────────────┐                       │
+      │ Cosine          │                       ▼
+      │ Similarity      │             ┌──────────────────┐
+      └────────┬────────┘             │     OMDb API     │
+               │                      │ IMDb / Awards    │
+               │                      └─────────┬────────┘
+               │                                │
+               └────────────────┬───────────────┘
+                                ▼
                     ┌──────────────────────┐
                     │  Movie Detail Page   │
                     │ Recommendations      │
@@ -286,17 +301,17 @@ Local Dataset Check
 │ Movie exists locally?    │
 └────────────┬─────────────┘
              │
-       ┌─────┴─────┐
-       │           │
-      YES          NO
-       │           │
-       ▼           ▼
- Local Data     Fetch directly
-                from TMDB
-       │           │
-       └─────┬─────┘
+        ┌────┴────┐
+        │         │
+       YES        NO
+        │         │
+        ▼         ▼
+  Local Data   Fetch directly
+               from TMDB
+        │         │
+        └────┬────┘
              ▼
-       Trending Cards
+      Trending Cards
 ```
 
 This allows trending movies that are not present in the local dataset to still be displayed and opened.
@@ -313,10 +328,10 @@ movies_data.csv
 
 The dataset contains approximately **3,600 movies** across:
 
-* English
-* Hindi
-* Telugu
-* Malayalam
+- English
+- Hindi
+- Telugu
+- Malayalam
 
 The local dataset is primarily used for fast search and recommendation generation, while live information is fetched from TMDB and OMDb when required.
 
@@ -324,15 +339,15 @@ The local dataset is primarily used for fast search and recommendation generatio
 
 ## 🔗 Data Sources
 
-| API / Source             | Purpose                                    |
-| ------------------------ | ------------------------------------------ |
-| **TMDB Discover Movie**  | Initial movie dataset                      |
-| **TMDB Trending Movie**  | Live trending movies                       |
-| **TMDB Movie Details**   | Runtime, budget, revenue, country, IMDb ID |
-| **TMDB Credits**         | Cast and crew                              |
-| **TMDB Watch Providers** | OTT availability                           |
-| **TMDB Videos**          | Trailers and videos                        |
-| **OMDb API**             | IMDb rating, vote count and awards         |
+| API / Source | Purpose |
+|---|---|
+| **TMDB Discover Movie** | Initial movie dataset |
+| **TMDB Trending Movie** | Live trending movies |
+| **TMDB Movie Details** | Runtime, budget, revenue, country, IMDb ID |
+| **TMDB Credits** | Cast and crew |
+| **TMDB Watch Providers** | OTT availability |
+| **TMDB Videos** | Trailers and videos |
+| **OMDb API** | IMDb rating, vote count and awards |
 
 ---
 
@@ -450,11 +465,11 @@ For Streamlit Community Cloud, API keys should be added through the application'
 
 CineMatch is deployed using **Streamlit Community Cloud**.
 
-**Live Application:**
+### 🚀 Live Application
 
 https://cinematch-uxaudmzzkbyn3ahtrhrquk.streamlit.app/
 
-Deployment flow:
+### Deployment Flow
 
 ```text
 GitHub Repository
@@ -474,12 +489,12 @@ Live CineMatch Application
 
 ## 📌 Current Limitations
 
-* Favorites and Watchlist are session-based.
-* Reviews are currently stored for the active session.
-* API availability depends on TMDB and OMDb services.
-* OTT availability can vary depending on region.
-* Some movie information may not be available from the APIs.
-* Trending data requires a working TMDB API connection.
+- Favorites and Watchlist are session-based.
+- Reviews are currently stored for the active session.
+- API availability depends on TMDB and OMDb services.
+- OTT availability can vary depending on region.
+- Some movie information may not be available from the APIs.
+- Trending data requires a working TMDB API connection.
 
 ---
 
@@ -487,16 +502,16 @@ Live CineMatch Application
 
 Possible future enhancements include:
 
-* Persistent Favorites and Watchlist using a database
-* User authentication and accounts
-* Collaborative filtering
-* Personalized recommendation history
-* Rotten Tomatoes / Metacritic integration
-* Automated movie dataset updates
-* Advanced AI-based recommendations
-* User profiles and personalized movie feeds
-* Better regional OTT filtering
-* More detailed movie analytics
+- Persistent Favorites and Watchlist using a database
+- User authentication and accounts
+- Collaborative filtering
+- Personalized recommendation history
+- Rotten Tomatoes / Metacritic integration
+- Automated movie dataset updates
+- Advanced AI-based recommendations
+- User profiles and personalized movie feeds
+- Better regional OTT filtering
+- More detailed movie analytics
 
 ---
 
@@ -504,20 +519,21 @@ Possible future enhancements include:
 
 CineMatch demonstrates practical implementation of:
 
-* Python programming
-* Streamlit application development
-* REST API integration
-* Data preprocessing
-* Natural language processing
-* TF-IDF vectorization
-* Cosine similarity
-* Recommendation systems
-* Concurrent API requests
-* Caching
-* Error handling
-* Responsive UI design
-* GitHub version control
-* Cloud deployment
+- Python programming
+- Streamlit application development
+- REST API integration
+- Data preprocessing
+- Natural language processing
+- TF-IDF vectorization
+- Cosine similarity
+- Recommendation systems
+- Concurrent API requests
+- Caching
+- Error handling
+- Responsive UI design
+- Mobile-first responsive movie browsing
+- GitHub version control
+- Cloud deployment
 
 ---
 
@@ -535,8 +551,10 @@ CineMatch was developed as a practical project to explore **recommendation syste
 
 If you find this project useful or interesting, consider giving the repository a ⭐ on GitHub.
 
-**Live App:**
+### 🔗 Links
+
+🚀 **Live App:**  
 https://cinematch-uxaudmzzkbyn3ahtrhrquk.streamlit.app/
 
-**GitHub:**
+💻 **GitHub:**  
 https://github.com/gallaramakrishna6-arch/cinematch
