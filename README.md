@@ -1,123 +1,533 @@
 # 🎬 CineMatch — Movie Recommendation System
 
-![Python](https://img.shields.io/badge/Python-3.13-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.38-red)
-![License](https://img.shields.io/badge/License-MIT-green)
+**CineMatch** is a content-based movie recommendation web application that helps users discover movies based on genre, plot similarity, mood, language, and personal watch preferences.
 
-**Live App:** https://cinematch-uxaudmzzkbyn3ahtrhrquk.streamlit.app/
-**GitHub:** https://github.com/gallaramakrishna6-arch/cinematch
+It supports **English, Hindi, Telugu, and Malayalam cinema** and combines a pre-fetched movie dataset with live movie information from **TMDB and OMDb APIs**.
 
-A content-based movie recommendation web app that suggests similar movies based on genre and plot similarity, across English, Hindi, Telugu, and Malayalam cinema. Built with Python, Streamlit, and Scikit-learn, with live data (ratings, box office, OTT availability) pulled from TMDB and OMDb.
+**Live App:** [CineMatch](https://cinematch-uxaudmzzkbyn3ahtrhrquk.streamlit.app/)
 
-## Screenshots
+**GitHub:** [CineMatch Repository](https://github.com/gallaramakrishna6-arch/cinematch)
 
-| Home | Mood-based Search | Movie Details |
-|------|--------------------|----------------|
-| ![Home](screenshots/home.jpg) | ![Mood Search](screenshots/mood.jpg) | ![Details](screenshots/read.jpg) |
-| ![Home](screenshots/home1.jpg) | ![Mood Search](screenshots/mood1.jpg) | ![Details](screenshots/read1.jpg) |
+---
 
-## Problem It Solves
+## ✨ Features
 
-Most movie recommendation demos are limited to a single dataset (usually English/Hollywood) and stop at "here are 5 similar titles." CineMatch goes further: it works across 4 languages, understands mood-based queries in plain English ("feeling stressed", "just had a breakup"), and enriches every recommendation with live data — IMDb rating, director, box-office hit/flop status, trailer, and where to actually watch it — instead of just a static list.
+### 🎯 Movie Recommendations
 
-## Tech Stack
+* Content-based movie recommendation system
+* TF-IDF vectorization for movie descriptions
+* Cosine similarity to find similar movies
+* Recommendations based on genre and plot similarity
 
-- **Python 3.13**
-- **Streamlit** — web app framework and UI
-- **Pandas** — data handling and filtering
-- **Scikit-learn** — TF-IDF vectorization + cosine similarity for recommendations
-- **TMDB API** — movie metadata, credits, watch providers, trailers
-- **OMDb API** — IMDb ratings and awards
-- **Streamlit Community Cloud** — deployment
-  
-## Architecture
+### 🌎 Multi-Language Movies
+
+* 🇺🇸 English
+* 🇮🇳 Hindi
+* 🇮🇳 Telugu
+* 🇮🇳 Malayalam
+
+### 🔥 Trending Movies
+
+* Live **Trending Now** movies powered by TMDB
+* Automatically fetches current trending movies
+* Network retry and fallback handling for API failures
+
+### 😊 Mood-Based Search
+
+Describe your mood or situation in natural language and CineMatch suggests suitable movies.
+
+Examples:
+
+* "I want something emotional"
+* "Give me a funny movie"
+* "I want an action movie"
+* "Something romantic"
+* "I want a thriller"
+
+### 🔎 Smart Search
+
+* Movie title search
+* Fuzzy matching for typing mistakes
+* Search across multiple languages
+
+### 🎬 Rich Movie Details
+
+Each movie can display:
+
+* IMDb rating
+* IMDb vote count
+* Release date
+* Runtime
+* Country
+* Genres
+* Plot / overview
+* Tagline
+* Budget
+* Worldwide revenue
+* Hit / Flop status
+* Awards
+* Production companies
+* IMDb information
+
+### 👥 Cast & Crew
+
+* Top cast members
+* Full cast list
+* Director
+* Writer
+* Producer
+* Music
+* Editor
+* Cinematography
+* Clickable actor information / Wikipedia search
+
+### 📺 OTT Availability
+
+View available streaming platforms such as:
+
+* Netflix
+* Amazon Prime Video
+* Disney+ / Hotstar
+* JioHotstar
+* Other region-specific providers
+
+OTT availability is retrieved dynamically from TMDB.
+
+### ▶️ Trailer & Songs
+
+* YouTube trailer search
+* YouTube movie song search
+* Quick access to related videos
+
+### ❤️ Favorites & Watchlist
+
+Users can:
+
+* Add movies to Favorites
+* Add movies to Watchlist
+* Remove saved movies
+* Access saved movies from the sidebar
+
+Currently, Favorites and Watchlist are stored for the active Streamlit session.
+
+### ⭐ In-App Reviews
+
+Users can:
+
+* Rate movies using a star rating
+* Write personal reviews
+* View reviews during the current session
+
+### 📱 Responsive UI
+
+The interface is designed to work across:
+
+* Desktop
+* Tablet
+* Mobile screens
+
+---
+
+## 🖼️ Screenshots
+
+Add your screenshots to the `screenshots/` folder and update the filenames below.
+
+| Home                          | Trending                              | Movie Details                                   |
+| ----------------------------- | ------------------------------------- | ----------------------------------------------- |
+| ![Home](screenshots/home.png) | ![Trending](screenshots/trending.png) | ![Movie Details](screenshots/movie_details.png) |
+
+| Mood Search                                 | Cast & Crew                   | Watchlist                               |
+| ------------------------------------------- | ----------------------------- | --------------------------------------- |
+| ![Mood Search](screenshots/mood_search.png) | ![Cast](screenshots/cast.png) | ![Watchlist](screenshots/watchlist.png) |
+
+> **Note:** If your screenshot filenames are different, change the paths above to match your actual files.
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology                    | Purpose                                              |
+| ----------------------------- | ---------------------------------------------------- |
+| **Python 3.13**               | Core programming language                            |
+| **Streamlit**                 | Web application framework                            |
+| **Pandas**                    | Data processing and filtering                        |
+| **Scikit-learn**              | TF-IDF and cosine similarity                         |
+| **TMDB API**                  | Movie metadata, trending, cast, crew, OTT and videos |
+| **OMDb API**                  | IMDb ratings, votes and awards                       |
+| **Concurrent Futures**        | Parallel API requests                                |
+| **Streamlit Community Cloud** | Application deployment                               |
+
+---
+
+## 🏗️ Architecture
 
 ```text
-Data Collection (TMDB API)
-        ↓
-Preprocessing (Pandas)
-        ↓
-TF-IDF Vectorization
-        ↓
-Cosine Similarity Matrix
-        ↓
-Streamlit UI (Search / Mood / Filters)
-        ↓
-Live API Enrichment (Ratings, OTT, Trailer)
+                    ┌──────────────────────┐
+                    │     User Input       │
+                    │ Search / Mood /      │
+                    │ Trending / Filters   │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │    Streamlit UI      │
+                    └──────────┬───────────┘
+                               │
+              ┌────────────────┴────────────────┐
+              │                                 │
+              ▼                                 ▼
+     ┌─────────────────┐              ┌──────────────────┐
+     │ Local Movie Data │              │    TMDB API      │
+     │ movies_data.csv  │              │ Live Movie Data  │
+     └────────┬────────┘              └─────────┬────────┘
+              │                                 │
+              ▼                                 ▼
+     ┌─────────────────┐              ┌──────────────────┐
+     │ TF-IDF          │              │ Cast / Crew      │
+     │ Vectorization   │              │ Trending         │
+     └────────┬────────┘              │ OTT / Videos     │
+              │                       │ Budget / Revenue │
+              ▼                       └─────────┬────────┘
+     ┌─────────────────┐                        │
+     │ Cosine          │                        ▼
+     │ Similarity      │              ┌──────────────────┐
+     └────────┬────────┘              │     OMDb API     │
+              │                       │ IMDb / Awards    │
+              │                       └─────────┬────────┘
+              │                                 │
+              └────────────────┬────────────────┘
+                               ▼
+                    ┌──────────────────────┐
+                    │  Movie Detail Page   │
+                    │ Recommendations      │
+                    │ Ratings / Cast / OTT │
+                    └──────────────────────┘
 ```
 
-- **Data layer**: `movies_data.csv` — pre-fetched dataset of ~3,600 movies (rating ≥ 2.5/5, min vote count) across 4 languages
-- **Recommendation engine**: TF-IDF on combined `overview + genres` text, cosine similarity for nearest-neighbor lookup
-- **Live enrichment**: On-demand parallel API calls (Director, Budget/Revenue, OTT providers, Trailer, IMDb rating/Awards) using `concurrent.futures` for speed, cached with `st.cache_data`
-- **Mood engine**: Keyword + fuzzy-match dictionary mapping feelings/situations to genres
-  
- ## Core Workflow
+---
 
-1. User searches by movie title, describes a mood, or browses the movie collection.
-2. The recommendation engine finds the most similar movies using TF-IDF and cosine similarity.
-3. Live movie details (IMDb rating, director, trailer, OTT availability, etc.) are fetched from TMDB and OMDb.
-4. Recommended movies are displayed with posters and detailed information.
-5. Users can explore similar movies and discover new content.
+## 🧠 Recommendation Engine
 
-## Setup — Run Locally
+CineMatch uses a **content-based filtering approach**.
+
+The recommendation pipeline works as follows:
+
+1. Movie information is loaded from `movies_data.csv`.
+2. Genre and plot/overview information are combined.
+3. Text is converted into numerical vectors using **TF-IDF**.
+4. Cosine similarity calculates how similar movies are.
+5. The most similar movies are returned as recommendations.
+
+### Formula
+
+Cosine similarity measures the similarity between two movie vectors:
+
+```text
+similarity(A, B) = (A · B) / (||A|| × ||B||)
+```
+
+A higher similarity score means the movies have more similar content.
+
+---
+
+## ⚡ Live API Enrichment
+
+CineMatch combines local movie data with live API information.
+
+When a user opens a movie:
+
+```text
+Movie Selected
+      ↓
+TMDB Movie Details
+      ↓
+TMDB Credits
+      ↓
+TMDB Watch Providers
+      ↓
+TMDB Videos
+      ↓
+OMDb IMDb Information
+      ↓
+Combined Movie Details
+```
+
+Multiple API requests are executed in parallel using `concurrent.futures` to improve loading speed.
+
+Frequently requested data is cached using Streamlit caching to reduce unnecessary API calls.
+
+The application also includes retry and fallback handling for temporary network/API failures.
+
+---
+
+## 🔥 Trending Movie Workflow
+
+Trending movies are retrieved from TMDB's trending endpoint.
+
+```text
+TMDB Trending API
+       ↓
+Trending Movie IDs
+       ↓
+Movie Information
+       ↓
+Local Dataset Check
+       ↓
+┌──────────────────────────┐
+│ Movie exists locally?    │
+└────────────┬─────────────┘
+             │
+       ┌─────┴─────┐
+       │           │
+      YES          NO
+       │           │
+       ▼           ▼
+ Local Data     Fetch directly
+                from TMDB
+       │           │
+       └─────┬─────┘
+             ▼
+       Trending Cards
+```
+
+This allows trending movies that are not present in the local dataset to still be displayed and opened.
+
+---
+
+## 📊 Data Layer
+
+The project includes a pre-fetched movie dataset:
+
+```text
+movies_data.csv
+```
+
+The dataset contains approximately **3,600 movies** across:
+
+* English
+* Hindi
+* Telugu
+* Malayalam
+
+The local dataset is primarily used for fast search and recommendation generation, while live information is fetched from TMDB and OMDb when required.
+
+---
+
+## 🔗 Data Sources
+
+| API / Source             | Purpose                                    |
+| ------------------------ | ------------------------------------------ |
+| **TMDB Discover Movie**  | Initial movie dataset                      |
+| **TMDB Trending Movie**  | Live trending movies                       |
+| **TMDB Movie Details**   | Runtime, budget, revenue, country, IMDb ID |
+| **TMDB Credits**         | Cast and crew                              |
+| **TMDB Watch Providers** | OTT availability                           |
+| **TMDB Videos**          | Trailers and videos                        |
+| **OMDb API**             | IMDb rating, vote count and awards         |
+
+---
+
+## 🔄 Core Workflow
+
+1. User opens CineMatch.
+2. User searches for a movie, selects Trending, or searches using a mood.
+3. CineMatch identifies the selected movie.
+4. The recommendation engine finds similar movies using TF-IDF and cosine similarity.
+5. The movie detail page loads live information from TMDB and OMDb.
+6. Cast, crew, ratings, OTT availability and videos are displayed.
+7. Users can add movies to Favorites or Watchlist.
+8. Similar movie recommendations are displayed for further discovery.
+
+---
+
+## 📁 Repository Structure
+
+```text
+cinematch/
+│
+├── moviesapp.py
+│   └── Main Streamlit application
+│
+├── movies_data.csv
+│   └── Pre-fetched movie dataset
+│
+├── requirements.txt
+│   └── Python dependencies
+│
+├── .streamlit/
+│   └── secrets.toml
+│       └── API keys (not committed)
+│
+├── screenshots/
+│   └── Application screenshots
+│
+├── .gitignore
+│
+└── README.md
+```
+
+---
+
+## 🚀 Setup — Run Locally
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/gallaramakrishna6-arch/cinematch.git
+```
+
+### 2. Open the project folder
+
+```bash
 cd cinematch
+```
+
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-Create a `.streamlit/secrets.toml` file with your own API keys:
+### 4. Configure API Keys
+
+Create:
+
+```text
+.streamlit/secrets.toml
+```
+
+Add your API keys:
+
 ```toml
 API_KEY = "your_tmdb_api_key"
 OMDB_API_KEY = "your_omdb_api_key"
 ```
 
-Run the app:
+### 5. Run the application
+
 ```bash
-streamlit run moviesapp.py
+python -m streamlit run moviesapp.py
 ```
 
-The app opens at `http://localhost:8501`.
-
-## Data Sources
-
-| Source | Used For |
-|--------|----------|
-| TMDB `/discover/movie` | Initial dataset — movies by language, rating, vote count |
-| TMDB `/movie/{id}` | Budget, revenue, IMDb ID |
-| TMDB `/movie/{id}/credits` | Director |
-| TMDB `/movie/{id}/watch/providers` | OTT platform availability |
-| TMDB `/movie/{id}/videos` | YouTube trailer |
-| OMDb `/?i={imdb_id}` | IMDb rating, awards |
-
-## Repository Structure
+The application will be available at:
 
 ```text
-cinematch/
-├── moviesapp.py           # Main Streamlit app
-├── movies_data.csv        # Pre-fetched movie dataset
-├── requirements.txt       # Python dependencies
-├── .streamlit/
-│   └── secrets.toml       # API keys (not committed — see .gitignore)
-├── screenshots/           # App screenshots for this README
-└── README.md
+http://localhost:8501
 ```
 
-## Possible Next Steps
+---
 
-- Persistent review storage using a database
-- Collaborative filtering based on user preferences
-- Director and actor-based recommendations
-- Scheduled dataset updates
-- Performance optimization with caching
-  
+## 🔐 API Key Security
+
+API keys are stored inside:
+
+```text
+.streamlit/secrets.toml
+```
+
+The secrets file should **never be committed to GitHub**.
+
+Make sure `.gitignore` contains:
+
+```text
+.streamlit/secrets.toml
+```
+
+For Streamlit Community Cloud, API keys should be added through the application's **Secrets** settings instead of hard-coding them into the source code.
+
+---
+
+## ☁️ Deployment
+
+CineMatch is deployed using **Streamlit Community Cloud**.
+
+**Live Application:**
+
+https://cinematch-uxaudmzzkbyn3ahtrhrquk.streamlit.app/
+
+Deployment flow:
+
+```text
+GitHub Repository
+       ↓
+Streamlit Community Cloud
+       ↓
+Install requirements.txt
+       ↓
+Configure API Secrets
+       ↓
+Run moviesapp.py
+       ↓
+Live CineMatch Application
+```
+
+---
+
+## 📌 Current Limitations
+
+* Favorites and Watchlist are session-based.
+* Reviews are currently stored for the active session.
+* API availability depends on TMDB and OMDb services.
+* OTT availability can vary depending on region.
+* Some movie information may not be available from the APIs.
+* Trending data requires a working TMDB API connection.
+
+---
+
+## 🔮 Future Improvements
+
+Possible future enhancements include:
+
+* Persistent Favorites and Watchlist using a database
+* User authentication and accounts
+* Collaborative filtering
+* Personalized recommendation history
+* Rotten Tomatoes / Metacritic integration
+* Automated movie dataset updates
+* Advanced AI-based recommendations
+* User profiles and personalized movie feeds
+* Better regional OTT filtering
+* More detailed movie analytics
+
+---
+
+## 🎯 Project Highlights
+
+CineMatch demonstrates practical implementation of:
+
+* Python programming
+* Streamlit application development
+* REST API integration
+* Data preprocessing
+* Natural language processing
+* TF-IDF vectorization
+* Cosine similarity
+* Recommendation systems
+* Concurrent API requests
+* Caching
+* Error handling
+* Responsive UI design
+* GitHub version control
+* Cloud deployment
+
+---
+
 ## 👨‍💻 Developer
 
-**Galla Ramakrishna**
+### Galla Ramakrishna
 
-- 🎓 B.Tech in Data Science
-- 💻 Python | Machine Learning | Streamlit
-- 🚀 Passionate about AI and Recommendation Systems
+**Data Science Graduate | Python | SQL | Power BI | Machine Learning**
 
-🔗 GitHub: https://github.com/gallaramakrishna6-arch
+CineMatch was developed as a practical project to explore **recommendation systems, API integration, data science, and interactive web application development**.
+
+---
+
+## ⭐ If you like CineMatch
+
+If you find this project useful or interesting, consider giving the repository a ⭐ on GitHub.
+
+**Live App:**
+https://cinematch-uxaudmzzkbyn3ahtrhrquk.streamlit.app/
+
+**GitHub:**
+https://github.com/gallaramakrishna6-arch/cinematch
