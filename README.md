@@ -127,30 +127,31 @@ The interface is designed to work across:
 * Mobile screens
 
 ---
-
 ## 🖼️ Screenshots
 
 ### 🏠 Home
 
-| Home                          | Home 1                           | Home 3                           |
-| ----------------------------- | -------------------------------- | -------------------------------- |
-| ![Home](screenshots/Home.jpg) | ![Home 1](screenshots/Home1.jpg) | ![Home 3](screenshots/Home3.jpg) |
+| Home                           | Home 1                            | Home 3                            |
+| ------------------------------ | --------------------------------- | --------------------------------- |
+| ![Home](screenshots/home0.jpg) | ![Home 1](screenshots/home11.jpg) | ![Home 3](screenshots/home13.jpg) |
 
-### 🎬 Movie Details
+### 📖 Read
 
-| Read                                   | Read 1                                    | Read 2                                    |
-| -------------------------------------- | ----------------------------------------- | ----------------------------------------- |
-| ![Movie Details](screenshots/Read.jpg) | ![Movie Details 1](screenshots/Read1.jpg) | ![Movie Details 2](screenshots/Read2.jpg) |
+| Read                           | Read 1                            | Read 2                            |
+| ------------------------------ | --------------------------------- | --------------------------------- |
+| ![Read](screenshots/read0.jpg) | ![Read 1](screenshots/read11.jpg) | ![Read 2](screenshots/read12.jpg) |
 
-| Read 3                                    | Read 4                                    |
-| ----------------------------------------- | ----------------------------------------- |
-| ![Movie Details 3](screenshots/Read3.jpg) | ![Movie Details 4](screenshots/Read4.jpg) |
+| Read 3                            | Read 4                            |
+| --------------------------------- | --------------------------------- |
+| ![Read 3](screenshots/read13.jpg) | ![Read 4](screenshots/read14.jpg) |
 
-### 🎭 Mood Search
+### 🎭 Mood
 
-| Mood                                 | Mood 1                                  |
-| ------------------------------------ | --------------------------------------- |
-| ![Mood Search](screenshots/Mood.jpg) | ![Mood Search 1](screenshots/Mood1.jpg) |
+| Mood                           | Mood 1                            |
+| ------------------------------ | --------------------------------- |
+| ![Mood](screenshots/mood0.jpg) | ![Mood 1](screenshots/mood11.jpg) |
+
+
 
 ## 🛠️ Tech Stack
 
