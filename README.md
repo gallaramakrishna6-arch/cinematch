@@ -132,16 +132,25 @@ The interface is designed to work across:
 
 ### 🏠 Home
 
-![CineMatch Home](screenshots/Home.png)
+| Home                          | Home 1                           | Home 3                           |
+| ----------------------------- | -------------------------------- | -------------------------------- |
+| ![Home](screenshots/Home.jpg) | ![Home 1](screenshots/Home1.jpg) | ![Home 3](screenshots/Home3.jpg) |
 
-### 📖 Movie Details
+### 🎬 Movie Details
 
-![CineMatch Movie Details](screenshots/Read.png)
+| Read                                   | Read 1                                    | Read 2                                    |
+| -------------------------------------- | ----------------------------------------- | ----------------------------------------- |
+| ![Movie Details](screenshots/Read.jpg) | ![Movie Details 1](screenshots/Read1.jpg) | ![Movie Details 2](screenshots/Read2.jpg) |
+
+| Read 3                                    | Read 4                                    |
+| ----------------------------------------- | ----------------------------------------- |
+| ![Movie Details 3](screenshots/Read3.jpg) | ![Movie Details 4](screenshots/Read4.jpg) |
 
 ### 🎭 Mood Search
 
-![CineMatch Mood Search](screenshots/Mood.png)
-
+| Mood                                 | Mood 1                                  |
+| ------------------------------------ | --------------------------------------- |
+| ![Mood Search](screenshots/Mood.jpg) | ![Mood Search 1](screenshots/Mood1.jpg) |
 
 ## 🛠️ Tech Stack
 
