@@ -130,19 +130,18 @@ The interface is designed to work across:
 
 ## 🖼️ Screenshots
 
-Add your screenshots to the `screenshots/` folder and update the filenames below.
+### 🏠 Home
 
-| Home                          | Trending                              | Movie Details                                   |
-| ----------------------------- | ------------------------------------- | ----------------------------------------------- |
-| ![Home](screenshots/home.png) | ![Trending](screenshots/trending.png) | ![Movie Details](screenshots/movie_details.png) |
+![CineMatch Home](screenshots/Home.png)
 
-| Mood Search                                 | Cast & Crew                   | Watchlist                               |
-| ------------------------------------------- | ----------------------------- | --------------------------------------- |
-| ![Mood Search](screenshots/mood_search.png) | ![Cast](screenshots/cast.png) | ![Watchlist](screenshots/watchlist.png) |
+### 📖 Movie Details
 
-> **Note:** If your screenshot filenames are different, change the paths above to match your actual files.
+![CineMatch Movie Details](screenshots/Read.png)
 
----
+### 🎭 Mood Search
+
+![CineMatch Mood Search](screenshots/Mood.png)
+
 
 ## 🛠️ Tech Stack
 
