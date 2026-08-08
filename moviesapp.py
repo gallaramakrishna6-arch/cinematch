@@ -281,7 +281,7 @@ def info_card(icon, label, value):
 def show_search_result_card(row, prefix=""):
     rating_10 = round(row['rating_5'] * 2, 1)
     if pd.notna(row['poster_path']):
-        html = f'<div style="position:relative;"><img src="https://image.tmdb.org/t/p/w300{row["poster_path"]}" style="width:100%; border-radius:8px;"><div style="position:absolute; top:8px; left:8px; background:#000000cc; color:#FFD700; padding:3px 8px; border-radius:6px; font-size:13px; font-weight:bold;">⭐ {rating_10}</div></div>'
+        html = f'<div style="position:relative;"><img class="poster-img" src="https://image.tmdb.org/t/p/w300{row["poster_path"]}" style="width:100%; border-radius:8px;"><div style="position:absolute; top:8px; left:8px; background:#000000cc; color:#FFD700; padding:3px 8px; border-radius:6px; font-size:13px; font-weight:bold;">⭐ {rating_10}</div></div>'
         st.markdown(html, unsafe_allow_html=True)
     else:
         st.write("🎬 (No poster)")
@@ -493,19 +493,56 @@ div[data-testid="stImage"] img { border-radius: 8px !important; box-shadow: 0 4p
     .hero-box { padding: 20px 14px !important; }
     .stat-card { padding: 10px !important; }
 }
-@media (max-width: 600px) {
-    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] { min-width: 46% !important; flex: 1 1 46% !important; }
+
+/* ===== MOBILE ONLY (<768px): 2-column compact movie grid ===== */
+/* Everything in this block is scoped strictly to max-width:767px and does
+   NOT affect desktop/tablet layout in any way. */
+@media (max-width: 767px) {
+    /* Force movie-card grids (built with st.columns) into a tight 2-column layout */
+    div[data-testid="stHorizontalBlock"] {
+        gap: 10px !important;
+        row-gap: 18px !important;
+        flex-wrap: wrap !important;
+    }
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+        min-width: 47% !important;
+        max-width: 48% !important;
+        flex: 1 1 47% !important;
+    }
+
+    /* Movie poster: professional 2:3 poster ratio, fills card width, no overflow */
+    .poster-img {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 2 / 3 !important;
+        object-fit: cover !important;
+        border-radius: 10px !important;
+        display: block !important;
+    }
+
+    /* Movie title (rendered as a button) wraps naturally instead of truncating */
+    .stButton button {
+        font-size: 12px !important;
+        padding: 4px 8px !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        line-height: 1.25 !important;
+        text-align: left !important;
+    }
+
     input[type="text"] { font-size: 14px !important; padding: 8px !important; }
     h1 { font-size: 20px !important; }
     h2 { font-size: 16px !important; }
     h3 { font-size: 14px !important; }
-    .stButton button { font-size: 12px !important; padding: 4px 8px !important; }
     .hero-box { padding: 16px 10px !important; }
     .hero-box p { font-size: 13px !important; }
     .stat-card { padding: 8px !important; }
     .stat-card div:first-child { font-size: 15px !important; }
     div[data-testid="stMetricValue"] { font-size: 16px !important; }
     div[data-testid="stMetricLabel"] { font-size: 11px !important; }
+
+    /* Prevent any accidental horizontal scroll on small screens */
+    .block-container { overflow-x: hidden !important; padding-left: 12px !important; padding-right: 12px !important; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -592,7 +629,7 @@ elif st.session_state.nav_page == "Favorites":
             for j, item in enumerate(row_chunk):
                 with cols[j]:
                     if item['poster_path']:
-                        st.markdown(f'<img src="https://image.tmdb.org/t/p/w300{item["poster_path"]}" style="width:100%; border-radius:8px;">', unsafe_allow_html=True)
+                        st.markdown(f'<img class="poster-img" src="https://image.tmdb.org/t/p/w300{item["poster_path"]}" style="width:100%; border-radius:8px;">', unsafe_allow_html=True)
                     if st.button(item['title'], key=f"fav_open_{item['id']}", use_container_width=True):
                         open_movie_from_dict(item)
                     st.caption(f"⭐ {item['rating_5']}/5 · {item['language']}")
@@ -609,7 +646,7 @@ elif st.session_state.nav_page == "Watchlist":
             for j, item in enumerate(row_chunk):
                 with cols[j]:
                     if item['poster_path']:
-                        st.markdown(f'<img src="https://image.tmdb.org/t/p/w300{item["poster_path"]}" style="width:100%; border-radius:8px;">', unsafe_allow_html=True)
+                        st.markdown(f'<img class="poster-img" src="https://image.tmdb.org/t/p/w300{item["poster_path"]}" style="width:100%; border-radius:8px;">', unsafe_allow_html=True)
                     if st.button(item['title'], key=f"wl_open_{item['id']}", use_container_width=True):
                         open_movie_from_dict(item)
                     st.caption(f"⭐ {item['rating_5']}/5 · {item['language']}")
@@ -646,7 +683,7 @@ elif st.session_state.nav_page == "Trending":
             for j, item in enumerate(row_chunk):
                 with cols[j]:
                     if item['poster_path']:
-                        html = f'<div style="position:relative;"><img src="https://image.tmdb.org/t/p/w300{item["poster_path"]}" style="width:100%; border-radius:8px;"><div style="position:absolute; top:8px; left:8px; background:#000000cc; color:#FFD700; padding:3px 8px; border-radius:6px; font-size:13px; font-weight:bold;">⭐ {item["rating_5"]}</div></div>'
+                        html = f'<div style="position:relative;"><img class="poster-img" src="https://image.tmdb.org/t/p/w300{item["poster_path"]}" style="width:100%; border-radius:8px;"><div style="position:absolute; top:8px; left:8px; background:#000000cc; color:#FFD700; padding:3px 8px; border-radius:6px; font-size:13px; font-weight:bold;">⭐ {item["rating_5"]}</div></div>'
                         st.markdown(html, unsafe_allow_html=True)
                     if st.button(item['title'], key=f"trendpg_{item['id']}", use_container_width=True):
                         open_movie_from_dict(item)
@@ -798,7 +835,7 @@ else:
                     t_cols = st.columns(5)
                 with t_cols[col_idx]:
                     if item['poster_path']:
-                        html = f'<div style="position:relative;"><img src="https://image.tmdb.org/t/p/w300{item["poster_path"]}" style="width:100%; border-radius:8px;"><div style="position:absolute; top:8px; left:8px; background:#000000cc; color:#FFD700; padding:3px 8px; border-radius:6px; font-size:13px; font-weight:bold;">⭐ {item["rating_5"]}</div></div>'
+                        html = f'<div style="position:relative;"><img class="poster-img" src="https://image.tmdb.org/t/p/w300{item["poster_path"]}" style="width:100%; border-radius:8px;"><div style="position:absolute; top:8px; left:8px; background:#000000cc; color:#FFD700; padding:3px 8px; border-radius:6px; font-size:13px; font-weight:bold;">⭐ {item["rating_5"]}</div></div>'
                         st.markdown(html, unsafe_allow_html=True)
                     if st.button(item['title'], key=f"pick_trend_{item['id']}", use_container_width=True):
                         open_movie_from_dict(item)
