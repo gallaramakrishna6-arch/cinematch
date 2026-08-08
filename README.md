@@ -164,9 +164,14 @@ The mobile interface is optimized with a **2-column movie grid**, compact movie 
 
 > Mobile view is optimized with a responsive 2-column movie grid for better browsing on smaller screens.
 
-![CineMatch Mobile View](screenshots/mobile.jpg)
+| 📱 Mobile View 1                                | 📱 Mobile View 2                                 |
+| ----------------------------------------------- | ------------------------------------------------ |
+| <img src="screenshots/mobile0.jpg" width="300"> | <img src="screenshots/mobile11.jpg" width="300"> |
 
----
+| 📱 Mobile View 3                                 | 📱 Mobile View 4                                 |
+| ------------------------------------------------ | ------------------------------------------------ |
+| <img src="screenshots/mobile12.jpg" width="300"> | <img src="screenshots/mobile13.jpg" width="300"> |
+
 
 ## 🛠️ Tech Stack
 
