@@ -498,16 +498,28 @@ div[data-testid="stImage"] img { border-radius: 8px !important; box-shadow: 0 4p
 /* Everything in this block is scoped strictly to max-width:767px and does
    NOT affect desktop/tablet layout in any way. */
 @media (max-width: 767px) {
-    /* Force movie-card grids (built with st.columns) into a tight 2-column layout */
-    div[data-testid="stHorizontalBlock"] {
+    /* Force movie-card grids (built with st.columns) into a tight 2-column layout.
+       Streamlit has used different data-testid names across versions
+       (stHorizontalBlock/stColumn in older builds, stColumn/column and
+       [data-testid="stHorizontalBlock"] descendants in newer ones), so every
+       selector below is repeated for each known variant to stay version-safe. */
+    div[data-testid="stHorizontalBlock"],
+    div[data-testid="column"],
+    div[data-testid="stHorizontalBlock"] > div {
         gap: 10px !important;
         row-gap: 18px !important;
         flex-wrap: wrap !important;
     }
-    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"],
+    div[data-testid="stHorizontalBlock"] div[data-testid="stColumn"],
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"],
+    div[data-testid="stHorizontalBlock"] div[data-testid="column"],
+    div[data-testid="stHorizontalBlock"] > div[class*="stColumn"],
+    div[data-testid="stHorizontalBlock"] > div[class*="column"] {
         min-width: 47% !important;
         max-width: 48% !important;
         flex: 1 1 47% !important;
+        width: 47% !important;
     }
 
     /* Movie poster: professional 2:3 poster ratio, fills card width, no overflow */
